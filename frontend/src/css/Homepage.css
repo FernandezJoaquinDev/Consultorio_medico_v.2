@@ -1,0 +1,40 @@
+#registrarse {
+  background: linear-gradient(rgba(0, 0, 0, 0.7)),
+    url("public/img/registrarse.png");
+  background-position: center;
+  background-size: cover;
+}
+
+section {
+  height: 50vh;
+  color: white;
+  width: 100%;
+}
+
+#about {
+  background: linear-gradient(rgba(0, 0, 0, 0.8)), url("public/img/about.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#especialidades {
+  /*background-color: rgba(0, 0, 0, 0.7);*/
+  background: linear-gradient(rgba(0, 0, 0, 0.6)),
+    url("public/img/especialidades.png");
+  background-size: cover;
+  height: 70vh;
+}
+
+.especialidad {
+  border: 10px inset rgb(7, 97, 119);
+  background-color: black;
+  text-decoration: none;
+  color: white;
+}
+
+#contacto {
+  background: linear-gradient(rgba(0, 0, 0, 0.7)),
+    url("public/img/contacto.png");
+  background-size: cover;
+  height: 30vh;
+}
