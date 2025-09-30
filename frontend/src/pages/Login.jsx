@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-const Login = () => {
+const Login = ({ usuarioActual, logeado }) => {
+  const navigate = useNavigate();
   const [pacienteNuevo, setPacienteNuevo] = useState({
     nombre: "",
     dni: "",
@@ -22,17 +23,44 @@ const Login = () => {
   const handleChangeIngreso = (e) => {
     setpacienteIngreso({ ...pacienteIngreso, [e.target.name]: e.target.value });
   };
-  const handleSubmitRegistro = () => {
-    alert("Registrar Usuairo");
+  const handleSubmitRegistro = async () => {
+    const resp = await fetch("http://localhost:5000/usuario", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre: pacienteNuevo.nombre,
+        dni: pacienteNuevo.dni,
+        email: pacienteNuevo.email,
+        contraseña: pacienteNuevo.contraseña,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      alert(data.msg);
+    } else {
+      alert(data.msg);
+      navigate("/");
+    }
   };
   const handleSubmitIngreso = async () => {
     const resp = await fetch("http://localhost:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(pacienteIngreso),
+      body: JSON.stringify({
+        dni: pacienteIngreso.dniIngreso,
+        contraseña: pacienteIngreso.contraseñaIngreso,
+      }),
     });
     const data = await resp.json();
-    alert(data.msg);
+    if (!resp.ok) {
+      console.log(data.msg);
+    } else {
+      localStorage.setItem("token", data.token);
+      usuarioActual(data.usuario);
+
+      logeado(true);
+      navigate("/");
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
   "/",
   [
-    check("dni", "El dni o la contraseña no son validos").isNumeric(),
+    //check("dni", "El dni o la contraseña no son validos").isNumeric(),
     check("dni", "EL dni no puede ser nulo").notEmpty(),
     check("contraseña", "La contraseña no puede ser nula").notEmpty(),
     validarCampos,

@@ -6,18 +6,45 @@ import Login from "./pages/Login";
 import Doctores from "./pages/Doctores";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import Administrador from "./pages/Administrador";
+import Turno from "./pages/Turno";
+import RutaAdmProt from "./components/RutaAdmProt";
+import Page404 from "./pages/Page404";
 
 function App() {
+  const [usuarioLog, setUsuarioLog] = useState({});
+  const [logeado, setLogeado] = useState(false);
   return (
     <div className="container-fluid" id="caja">
       <div className="border-bottom border-dark sticky-top">
-        <NavBar />
+        <NavBar
+          usuarioLog={usuarioLog}
+          logeado={logeado}
+          cambioLog={setUsuarioLog}
+          exitLog={setLogeado}
+        />
       </div>
 
       <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={<Homepage usuarioLog={usuarioLog} logeado={logeado} />}
+        />
+        <Route
+          path="/login"
+          element={<Login usuarioActual={setUsuarioLog} logeado={setLogeado} />}
+        />
         <Route path="/doctores/:especialidad" element={<Doctores />} />
+        <Route
+          path="/admin"
+          element={
+            <RutaAdmProt logeado={logeado} usuario={usuarioLog}>
+              <Administrador />
+            </RutaAdmProt>
+          }
+        />
+        <Route path="/turno" element={<Turno />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
       <div className="border-top border-dark fixed-bottom" id="footer">
         <Footer />

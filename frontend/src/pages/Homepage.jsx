@@ -5,21 +5,24 @@ import { FaGithub, FaInstagramSquare, FaBriefcase } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { useState } from "react";
 
-const Homepage = ({ cargarDocs }) => {
+const Homepage = ({ usuarioLog, logeado }) => {
   return (
-    <div className="container-fluid" id="caja">
+    <div className="" id="caja">
       <section id="registrarse">
         <div className="container d-flex justify-content-center align-items-center">
           <div className="row mt-5">
             <h2 className="text-center mt-5">¿Necesitas un turno?</h2>
-            <Link to="/login" className="btn btn-primary btn-lg">
-              Registrarse...
+            <Link
+              to={logeado ? `/turno` : `/login`}
+              className="btn btn-primary btn-lg"
+            >
+              {logeado ? `Sacar un turno...` : `Ingresar...`}
             </Link>
           </div>
         </div>
       </section>
       <section id="about" className=" border-top border-ligth">
-        <div className="container-fluid">
+        <div className="container">
           <div className="row text-center mt-5">
             <h2 className="mt-5">¿Que es Consultorio Medico v.2?</h2>
             <p>

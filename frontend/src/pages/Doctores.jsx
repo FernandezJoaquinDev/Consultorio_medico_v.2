@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 const Doctores = () => {
+  const navigate = useNavigate();
   const { especialidad } = useParams();
   const [cargando, setCargando] = useState(true);
   const [doctores, setDoctores] = useState([]);
@@ -28,9 +29,9 @@ const Doctores = () => {
 
   return (
     <div className="container-fluid">
-      <Link className="btn btn-danger mt-3" to="/">
+      <span className="btn btn-danger mt-3" onClick={() => navigate(-1)}>
         <FaArrowLeft />
-      </Link>
+      </span>
       <div className="row ms-5">
         {doctores.length === 0 ? (
           <h3>No hay especialistas</h3>
