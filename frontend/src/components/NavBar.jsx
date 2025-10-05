@@ -6,6 +6,7 @@ const NavBar = ({ usuarioLog, logeado, exitLog, cambioLog }) => {
   const exit = () => {
     cambioLog({});
     exitLog(false);
+    localStorage.removeItem("token");
   };
 
   return (

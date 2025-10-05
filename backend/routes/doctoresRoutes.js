@@ -23,10 +23,6 @@ router.post(
       "especialidad",
       "La especialidad del medico no puede estar vacia"
     ).notEmpty(),
-    check(
-      "especialidad",
-      "El formato de la especialidad es incorrecto"
-    ).isMongoId(),
     validarToken,
     validarEmpleado,
     validarCampos,

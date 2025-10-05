@@ -46,66 +46,81 @@ const postUsuario = async (req, res) => {
 };
 
 const putUsuario = async (req, res) => {
-  const { id } = req.params;
-  const { email, contraseña, contraseñaActual } = req.body;
+  const { dni } = req.body;
   try {
-    const encontrado = await Usuario.findById(id);
-    if (encontrado) {
-      if (email) {
-        encontrado.email = email;
-      }
-      if (contraseña) {
-        const evaluar = bcrypt.compareSync(contraseña, encontrado.contraseña);
-
-        if (evaluar) {
-          const salt = bcrypt.genSaltSync(10);
-          const hash = bcrypt.hashSync(contraseñaActual, salt);
-          encontrado.contraseña = hash;
-        } else {
-          throw new Error("Contraseña incorrecta");
-        }
-      }
-      await encontrado.save();
-      res.status(200).json({ msg: "Usuario modificado" });
-    } else {
-      throw new Error("Usuario no encontrado");
+    const encontrado = await Usuario.findOne({ dni: dni });
+    if (!encontrado) {
+      return res.status(400).json({ msg: "Usuario no encontrado" });
     }
+    if (encontrado.estado) {
+      return res.status(400).json({ msg: "El usuario esta habilitado" });
+    }
+    console.log(encontrado);
+    encontrado.estado = true;
+    await encontrado.save();
+    res.status(200).json({ msg: "Usuario dado de alta" });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
 };
 
 const deleteUsuario = async (req, res) => {
-  const { id } = req.params;
+  const { dni } = req.body;
   try {
-    const encontrado = await Usuario.findByIdAndUpdate(id, { estado: false });
-    if (encontrado) {
-      res.status(200).json({ msg: "Usuario dado de baja" });
+    const encontrado = await Usuario.findOne({ dni: dni });
+    if (!encontrado) {
+      return res.status(400).json({ msg: "Usuario no encontrado" });
     }
+    if (!encontrado.estado) {
+      return res.status(400).json({ msg: "El usuario ya fue dado de baja" });
+    }
+    encontrado.estado = false;
+    await encontrado.save();
+    res.status(200).json({ msg: "Usuario dado de baja" });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
 };
 
 const putUsuarioAdmin = async (req, res) => {
-  const { rol, estado, dni } = req.body;
-  const usuario = await Usuario.findOne({ dni: dni });
-  if (usuario) {
-    if (rol) {
-      const rolEncontrado = await Rol.findOne({ nombre: rol.toUpperCase() });
-      if (rolEncontrado) {
-        usuario.rol = rolEncontrado._id;
-      } else {
-        res.status(400).json({ msg: "El rol ingresado no fue encontrado" });
-      }
+  const { dni } = req.body;
+  try {
+    const encontrado = await Usuario.findOne({ dni: dni });
+    if (!encontrado) {
+      return res.status(400).json({ msg: "Usuario no encontrado" });
     }
-    if (estado) {
-      usuario.estado = estado;
+    if (encontrado.estado) {
+      return res.status(400).json({ msg: "El usuario esta habilitado" });
     }
-    await usuario.save();
-    res.status(200).json({ msg: "Usuario modificado exitosamente" });
-  } else {
-    res.status(400).json({ msg: "Usuario no encontrado" });
+    encontrado.estado = true;
+    await encontrado.save();
+    res.status(200).json({ msg: "Usuario dado de alta" });
+  } catch (error) {
+    res.status(400).json({ msg: `Error en el servidor: ${error}` });
+  }
+};
+
+const putRolUsuario = async (req, res) => {
+  const { dni, nombre } = req.body;
+  try {
+    const usuarioFind = await Usuario.findOne({ dni: dni });
+    if (!usuarioFind) {
+      return res.status(400).json({ msg: `Usuario no encontrado` });
+    }
+    const rolFind = await Rol.findOne({ nombre: nombre.toUpperCase() });
+    if (!rolFind) {
+      return res.status(400).json({ msg: "Rol no encontrado" });
+    }
+    if (rolFind._id.equals(usuarioFind.rol)) {
+      return res.status(400).json({ msg: "El usuario ya posee ese rol" });
+    }
+    usuarioFind.rol = rolFind._id;
+    await usuarioFind.save();
+    return res
+      .status(200)
+      .json({ msg: `${usuarioFind.nombre} ahora es ${rolFind.nombre}` });
+  } catch (error) {
+    res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
 };
 
@@ -116,4 +131,5 @@ module.exports = {
   postUsuario,
   putUsuario,
   deleteUsuario,
+  putRolUsuario,
 };

@@ -39,9 +39,9 @@ router.post(
 );
 
 router.delete(
-  "/:id",
+  "/",
   [
-    check("id", "El identificador no tiene un formato valido").isMongoId(),
+    check("nombre", "El nombre no puede estar vacio").notEmpty(),
     validarToken,
     ValidarAdmin,
     validarCampos,
@@ -50,9 +50,9 @@ router.delete(
 );
 
 router.put(
-  "/:id",
+  "/",
   [
-    check("id", "El identificador no tiene un formato valido").isMongoId(),
+    check("nombre", "El nombre no puede estar vacio").notEmpty(),
     validarToken,
     ValidarAdmin,
     validarCampos,

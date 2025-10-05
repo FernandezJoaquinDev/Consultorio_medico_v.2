@@ -29,19 +29,24 @@ const getDoctores = async (req, res) => {
 const postDoctores = async (req, res) => {
   const { nombre, especialidad } = req.body;
   try {
+    const existeEsp = await Especialidad.findOne({
+      nombre: especialidad.toUpperCase(),
+    });
+    if (!existeEsp) {
+      return res.status(400).json({ msg: `Especialidad no encontrada` });
+    }
     const existe = await Doctor.findOne({
       nombre: nombre,
-      especialidad: especialidad,
+      especialidad: existeEsp._id,
     });
     if (existe) {
-      throw new Error("El doctor registrado ya existe");
-    } else {
-      const nuevo = new Doctor({ nombre, especialidad });
-      nuevo.save();
-      res
-        .status(200)
-        .json({ msg: `El doctor ${nuevo.nombre} fue registrado con exito` });
+      return res.status(400).json({ msg: `El doctor ingresado ya existe` });
     }
+    const nuevo = new Doctor({ nombre, especialidad: existeEsp._id });
+    nuevo.save();
+    res
+      .status(200)
+      .json({ msg: `El doctor ${nuevo.nombre} fue registrado con exito` });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
@@ -49,24 +54,14 @@ const postDoctores = async (req, res) => {
 
 const putDoctores = async (req, res) => {
   const { id } = req.params;
-  const { nombre, especialidad } = req.body;
   try {
-    const encontrado = await Doctor.findById(id).populate("especialidad");
-    if (encontrado) {
-      if (nombre) {
-        encontrado.nombre = nombre;
-      }
-      if (especialidad) {
-        encontrado.especialidad = especialidad;
-      }
-      if (!nombre && !especialidad) {
-        encontrado.estado = true;
-      }
-      await encontrado.save();
-      res.status(200).json({ msg: "Doctor actualizado", doctor: encontrado });
-    } else {
-      throw new Error("Doctor no encontrado");
+    const encontrado = await Doctor.findById(id);
+    if (!encontrado) {
+      return res.status(400).json({ msg: `Usuario no encontrado` });
     }
+    encontrado.estado = !encontrado.estado;
+    await encontrado.save();
+    res.status(200).json({ msg: `Estado modificado` });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }

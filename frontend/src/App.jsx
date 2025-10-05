@@ -34,7 +34,10 @@ function App() {
           path="/login"
           element={<Login usuarioActual={setUsuarioLog} logeado={setLogeado} />}
         />
-        <Route path="/doctores/:especialidad" element={<Doctores />} />
+        <Route
+          path="/doctores/:especialidad"
+          element={<Doctores usuarioLog={usuarioLog} logeado={logeado} />}
+        />
         <Route
           path="/admin"
           element={

@@ -6,6 +6,7 @@ const {
   deleteUsuario,
   putUsuario,
   putUsuarioAdmin,
+  putRolUsuario,
 } = require("../controllers/usuariosControllers");
 const { check } = require("express-validator");
 const validarCampos = require("../middlewares/exValidator");
@@ -35,28 +36,21 @@ router.post(
   postUsuario
 );
 
-router.delete(
-  "/:id",
+router.delete("/", [validarToken, ValidarAdmin, validarCampos], deleteUsuario);
+
+router.put("/", [validarToken, ValidarAdmin, validarCampos], putUsuarioAdmin);
+router.put(
+  "/rol",
   [
-    check("id", "El formato del identificador no es valido").isMongoId(),
+    check("dni", "El dni no puede estar vacio").notEmpty(),
+    check("nombre", "el nombre no puede estar vacio").notEmpty(),
+    validarToken,
+    ValidarAdmin,
     validarCampos,
   ],
-  deleteUsuario
+  putRolUsuario
 );
 
-router.put(
-  "/admin",
-  [validarToken, ValidarAdmin, validarCampos],
-  putUsuarioAdmin
-);
-
-router.put(
-  "/:id",
-  [
-    check("id", "El formato del identificador no es valido").isMongoId(),
-    validarCampos,
-  ],
-  putUsuario
-);
+//router.put("/", [validarToken, ValidarAdmin, validarCampos], putUsuario);
 
 module.exports = router;

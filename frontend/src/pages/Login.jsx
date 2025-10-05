@@ -120,7 +120,7 @@ const Login = ({ usuarioActual, logeado }) => {
               onChange={handleChangeIngreso}
             />
             <input
-              type="text"
+              type="password"
               className="form-control border border-dark mb-2"
               placeholder="Contraseña"
               name="contraseñaIngreso"

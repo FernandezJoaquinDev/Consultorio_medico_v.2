@@ -29,60 +29,57 @@ const postRol = async (req, res) => {
   const { nombre } = req.body;
 
   try {
-    const rolExistente = await Rol.findOne({ nombre });
-    if (rolExistente)
-      throw new Error(
-        `El rol ${rolExistente.nombre} ya existe en la base de datos`
-      );
-    else {
-      const rol = new Rol({ nombre });
-      rol.save();
-      res.status(200).json({ msg: `El rol ${nombre} fue creado exitosamente` });
+    const rolExistente = await Rol.findOne({ nombre: nombre.toUpperCase() });
+    if (rolExistente) {
+      return res.status(400).json({
+        msg: `El rol: ${rolExistente.nombre} ya existe en la base de datos`,
+      });
     }
+    const rol = new Rol({ nombre: nombre.toUpperCase() });
+    await rol.save();
+    res
+      .status(200)
+      .json({ msg: `El rol ${rol.nombre} fue creado exitosamente` });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
 };
 
 const putRol = async (req, res) => {
-  const { id } = req.params;
   const { nombre } = req.body;
   try {
-    const encontrado = await Rol.findById(id);
-    if (encontrado) {
-      if (nombre) {
-        const repetido = await Rol.findOne({ nombre });
-        if (repetido) {
-          throw new Error(`El rol ${nombre} ya existe`);
-        } else {
-          encontrado.nombre = nombre;
-          await encontrado.save();
-          res
-            .status(200)
-            .json({ msg: `El rol ha cambiado de nombre a ${nombre}` });
-        }
-      } else {
-        encontrado.estado = true;
-        await encontrado.save();
-        res.status(200).json({ msg: "Rol dado de alta" });
-      }
-    } else {
-      throw new Error("Rol no encontrado");
+    const encontrado = await Rol.findOne({ nombre: nombre.toUpperCase() });
+    if (!encontrado) {
+      return res.status(400).json({ msg: `Rol no encontrado` });
     }
+    if (encontrado.estado) {
+      return res.status(400).json({ msg: `El rol ya estaba habilitado` });
+    }
+    encontrado.estado = true;
+    await encontrado.save();
+    res
+      .status(200)
+      .json({ msg: `El rol: ${encontrado.nombre} fue dado de alta` });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
 };
 
 const deleteRol = async (req, res) => {
-  const { id } = req.params;
+  const { nombre } = req.body;
   try {
-    const encontrado = await Rol.findByIdAndUpdate(id, { estado: false });
-    if (encontrado) {
-      res.status(200).json({ msg: `Rol dado de baja` });
-    } else {
-      res.status(400).json({ msg: `Error en la ejecucion` });
+    const encontrado = await Rol.findOne({ nombre: nombre.toUpperCase() });
+    if (!encontrado) {
+      return res.status(400).json({ msg: `Rol no encontrado` });
     }
+    if (!encontrado.estado) {
+      return res.status(400).json({ msg: `El rol ya estaba deshabilitado` });
+    }
+    encontrado.estado = false;
+    await encontrado.save();
+    res
+      .status(200)
+      .json({ msg: `El rol ${encontrado.nombre} fue dado de baja` });
   } catch (error) {
     res.status(400).json({ msg: `Error en el servidor: ${error}` });
   }
