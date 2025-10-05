@@ -18,7 +18,6 @@ section {
 }
 
 #especialidades {
-  /*background-color: rgba(0, 0, 0, 0.7);*/
   background: linear-gradient(rgba(0, 0, 0, 0.6)),
     url("public/img/especialidades.png");
   background-size: cover;

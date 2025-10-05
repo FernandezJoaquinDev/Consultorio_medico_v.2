@@ -64,10 +64,11 @@ const Login = ({ usuarioActual, logeado }) => {
   };
 
   return (
-    <div className="">
-      <Link className="btn btn-danger mt-3 ms-5" to="/">
+    <div>
+      <Link to="/" className="btn btn-danger text-start mt-1 ms-3">
         <FaArrowLeft />
       </Link>
+
       <div className="container mt-3">
         <div className="row border-bottom border-dark mb-3">
           <input

@@ -10,11 +10,8 @@ const NavBar = ({ usuarioLog, logeado, exitLog, cambioLog }) => {
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between"
-      style={{ width: "100%" }}
-    >
-      <Link className="navbar-brand" to="/">
+    <nav className="navbar  navbar-light bg-light d-flex justify-content-between">
+      <Link className="navbar-brand ms-1" to="/">
         Consultorio Medico V.2
       </Link>
       {usuarioLog?.rol?.nombre === "ADMIN" && logeado ? (
@@ -41,7 +38,7 @@ const NavBar = ({ usuarioLog, logeado, exitLog, cambioLog }) => {
           </span>
         </div>
       ) : (
-        <Link to="/login" className="btn btn-primary">
+        <Link to="/login" className="btn btn-primary me-1">
           Ingresar
         </Link>
       )}

@@ -105,7 +105,7 @@ const Homepage = ({ usuarioLog, logeado }) => {
         </div>
       </section>
       <section id="contacto" className="border-top border-ligth">
-        <div className="container-fluid text-center">
+        <div className="container text-center">
           <div className="row mt-3">
             <h2>Metodos de Contacto</h2>
           </div>

@@ -15,7 +15,7 @@ function App() {
   const [usuarioLog, setUsuarioLog] = useState({});
   const [logeado, setLogeado] = useState(false);
   return (
-    <div className="container-fluid" id="caja">
+    <div id="caja">
       <div className="border-bottom border-dark sticky-top">
         <NavBar
           usuarioLog={usuarioLog}
@@ -49,9 +49,6 @@ function App() {
         <Route path="/turno" element={<Turno />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
-      <div className="border-top border-dark fixed-bottom" id="footer">
-        <Footer />
-      </div>
     </div>
   );
 }
