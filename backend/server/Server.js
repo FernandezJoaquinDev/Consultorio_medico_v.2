@@ -5,6 +5,7 @@ const especialidadesRoutes = require("../routes/especialidadesRoutes");
 const loginRoute = require("../routes/loginRoute");
 const rolRoutes = require("../routes/rolRoutes");
 const usuariosRoutes = require("../routes/usuariosRoutes");
+const turnosRoutes = require("../routes/turnosRoutes");
 const conectardb = require("../db/mongoConecction");
 
 class Server {
@@ -19,6 +20,7 @@ class Server {
       doctores: "/doctores",
       rol: "/rol",
       especialidades: "/especialidades",
+      turnos: "/turnos",
     };
     this.routes();
   }
@@ -32,6 +34,7 @@ class Server {
     this.app.use(this.paths.especialidades, especialidadesRoutes);
     this.app.use(this.paths.rol, rolRoutes);
     this.app.use(this.paths.login, loginRoute);
+    this.app.use(this.paths.turnos, turnosRoutes);
   }
   conectarBD() {
     conectardb();
