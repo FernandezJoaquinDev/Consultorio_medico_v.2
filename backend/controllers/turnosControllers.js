@@ -3,9 +3,11 @@ const dayjs = require("dayjs");
 const getTurnos = async (req, res) => {
   const id = req.id;
   try {
-    const turnos = await Turno.find({ paciente: id, estado: true })
-      .populate("paciente", "nombre")
-      .populate("doctor", "nombre");
+    const turnos = await Turno.find({ paciente: id, estado: true }).populate({
+      path: "doctor",
+      select: "nombre",
+      populate: { path: "especialidad", select: "nombre " },
+    });
     if (!turnos) {
       return res.status(400).json({ msg: "Usted no tiene turnos programados" });
     }
@@ -25,6 +27,7 @@ const postTurnos = async (req, res) => {
       doctor: doctor,
       paciente: id,
     });
+
     if (!turno) {
       return res.status(400).json({ msg: "Error al generar turno" });
     }
@@ -36,16 +39,12 @@ const postTurnos = async (req, res) => {
 };
 
 const putTurnos = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
-    const turno = await Turno.findById(id);
-    if (!turno) {
-      return res.status(400).json({ msg: "Error al dar de baja el turno" });
+    const turnoEliminado = await Turno.findByIdAndDelete(id);
+    if (!turnoEliminado) {
+      return res.status(400).json({ msg: "Error al eliminar el turno" });
     }
-    if (turno && !turno.estado) {
-      return res.status(400).json({ msg: "El turno esta dado de baja" });
-    }
-    turno.estado = true;
     res.status(200).json({ msg: "Turno dado de baja" });
   } catch (error) {
     res.status(400).json({ msg: "Error del sistema", error });

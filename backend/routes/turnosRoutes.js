@@ -25,6 +25,6 @@ router.post(
   postTurnos
 );
 
-router.put("/:id", [validarToken, validarEmpleado, validarCampos], putTurnos);
+router.put("/", [validarToken, validarEmpleado, validarCampos], putTurnos);
 
 module.exports = router;

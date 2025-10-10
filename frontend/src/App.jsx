@@ -10,7 +10,7 @@ import Administrador from "./pages/Administrador";
 import Turno from "./pages/Turno";
 import RutaAdmProt from "./components/RutaAdmProt";
 import Page404 from "./pages/Page404";
-
+//cambiar el funcionamiento del usuario para que sea consistente con el token
 function App() {
   const [usuarioLog, setUsuarioLog] = useState({});
   const [logeado, setLogeado] = useState(false);

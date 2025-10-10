@@ -5,6 +5,9 @@ import { data, Link, useNavigate, useParams } from "react-router";
 import { LuDot } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 const Doctores = ({ usuarioLog, logeado }) => {
   const navigate = useNavigate();
@@ -17,8 +20,6 @@ const Doctores = ({ usuarioLog, logeado }) => {
       headers: { "Content-Type": "application/json" },
     });
     const data = await resp.json();
-    console.log(resp);
-    console.log(data);
     if (resp.ok) {
       setDoctores(data);
     } else {
@@ -39,6 +40,34 @@ const Doctores = ({ usuarioLog, logeado }) => {
     navigate(-1);
   };
 
+  const pedirTurno = async (idmed) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Usted no esta logeado aun");
+      navigate("/login");
+    } else {
+      const fecha = prompt(
+        "ingrese la fecha y hora en la que desea su turno y nosotros nos contactaremos con usted. Formato de fecha: DD/MM/AAAA HH:mm"
+      );
+      const parsed = dayjs(fecha, "DD/MM/YYYY HH:mm", true);
+      console.log(parsed);
+      if (!parsed.isValid()) {
+        alert("Formato de fecha inválido. Use DD/MM/AAAA HH:mm");
+        return;
+      }
+
+      const fechaFormato = parsed.toISOString();
+
+      const resp = await fetch("http://localhost:5000/turnos", {
+        method: "POST",
+        headers: { "content-type": "application/json", auth: `${token}` },
+        body: JSON.stringify({ fecha: fechaFormato, doctor: idmed }),
+      });
+      const data = await resp.json();
+      alert(data.msg);
+    }
+  };
+
   useEffect(() => {
     cargaDatos();
   }, [especialidad]);
@@ -54,7 +83,10 @@ const Doctores = ({ usuarioLog, logeado }) => {
         ) : (
           doctores.map((item, index) => (
             <div className="col-sm-12 col-md-2 d-flex" key={index}>
-              <div className="card mt-3 flex-fill h-100">
+              <div
+                onClick={() => pedirTurno(item._id)}
+                className="card mt-3 flex-fill h-100"
+              >
                 <div className="card-title text-center">
                   <h3>{item.nombre}</h3>
                 </div>

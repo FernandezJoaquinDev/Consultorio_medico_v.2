@@ -21,7 +21,6 @@ const Administrador = () => {
   };
 
   const handleSubmitDoc = async () => {
-    console.log("empecemo");
     const token = localStorage.getItem("token");
     if (!token) {
       return alert("no tiene permisos de administrador");
